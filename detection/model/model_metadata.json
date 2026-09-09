@@ -1,0 +1,40 @@
+{
+  "model_type": "RandomForestClassifier",
+  "feature_names": [
+    "create_rate",
+    "modified_rate",
+    "rename_rate",
+    "delete_rate",
+    "operations_rate",
+    "directories_affected",
+    "activity_burst"
+  ],
+  "classes": {
+    "0": "BENIGN",
+    "1": "RANSOMWARE_LIKE"
+  },
+  "accuracy": 1.0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1_score": 1.0,
+  "confusion_matrix": [
+    [
+      500,
+      0
+    ],
+    [
+      0,
+      500
+    ]
+  ],
+  "feature_importances": {
+    "create_rate": 0.0313,
+    "modified_rate": 0.1316,
+    "rename_rate": 0.261,
+    "delete_rate": 0.0003,
+    "operations_rate": 0.2564,
+    "directories_affected": 0.0521,
+    "activity_burst": 0.2673
+  },
+  "trained_at": 1788930568.2743187
+}

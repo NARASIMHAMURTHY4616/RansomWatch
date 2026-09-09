@@ -1,0 +1,25 @@
+# Core Web & API
+fastapi>=0.104.0
+uvicorn[standard]>=0.23.0
+pydantic>=2.4.0
+
+# System & Monitoring
+watchdog>=3.0.0
+psutil>=5.9.0
+
+# Data Science & Machine Learning
+pandas>=2.0.0
+numpy>=1.24.0
+scikit-learn>=1.3.0
+joblib>=1.3.0
+
+# Database
+sqlalchemy>=2.0.0
+
+# Generative AI & Environment
+google-genai>=0.1.1
+python-dotenv>=1.0.0
+
+# Testing & HTTP
+pytest>=7.4.0
+httpx>=0.24.0

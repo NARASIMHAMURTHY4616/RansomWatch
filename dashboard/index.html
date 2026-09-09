@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RansomWatch — SOC Threat Detection & AI Analysis Dashboard</title>
+  <meta name="description" content="AI-Based Early Ransomware Behavior Detection and Analysis prototype SOC Dashboard">
+  <link rel="stylesheet" href="style.css">
+  <!-- Chart.js for real-time telemetry -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="soc-container">
+    <!-- Header -->
+    <header class="soc-header">
+      <div class="brand-section">
+        <div class="logo-shield">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
+            <path d="M12 8v4"/>
+            <path d="M12 16h.01"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-title">RANSOM<span class="accent">WATCH</span></h1>
+          <p class="brand-subtitle">AI-Based Early Ransomware Behavior Detection & Analysis</p>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <div class="status-pill" id="systemStatusPill">
+          <span class="status-dot pulse-green" id="systemStatusDot"></span>
+          <span id="systemStatusText">SYSTEM ACTIVE</span>
+        </div>
+        <div class="gemini-pill" id="geminiStatusPill">
+          <span class="status-dot" id="geminiDot"></span>
+          <span id="geminiStatusText">GEMINI AI: CHECKING</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Simulation Controls Bar -->
+    <section class="simulation-banner">
+      <div class="sim-left">
+        <span class="badge warning-badge">SANDBOX ENVIRONMENT</span>
+        <span class="sim-target">Target: <code id="targetDirLabel">test_data/</code></span>
+        <span class="sim-guardrail">Controlled Safe Prototype — Reversible Simulated Modifications</span>
+      </div>
+      <div class="sim-actions">
+        <button id="btnRunBenign" class="btn btn-secondary">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          Simulate Benign Activity
+        </button>
+        <button id="btnRunRansomware" class="btn btn-danger pulse-red">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Simulate Ransomware Burst
+        </button>
+        <button id="btnCleanup" class="btn btn-outline">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+          Reset Sandbox
+        </button>
+      </div>
+    </section>
+
+    <!-- KPI Summary Cards -->
+    <section class="kpi-grid">
+      <div class="kpi-card" id="cardRiskLevel">
+        <div class="kpi-header">
+          <span class="kpi-title">CURRENT THREAT LEVEL</span>
+          <span class="kpi-tag" id="kpiSeverityTag">LOW</span>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiRiskScore">0</span>
+          <span class="kpi-unit">/ 100</span>
+        </div>
+        <div class="risk-bar-container">
+          <div class="risk-bar-fill" id="riskBarFill" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-title">OPERATIONS VELOCITY</span>
+          <span class="kpi-tag neutral-tag">5s WINDOW</span>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiOpsRate">0.0</span>
+          <span class="kpi-unit">ops/sec</span>
+        </div>
+        <div class="kpi-subtext">Peak 1s Burst: <strong id="kpiBurst">0 ops</strong></div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-title">RAPID FILE RENAMES</span>
+          <span class="kpi-tag warning-tag">T1486 KEY</span>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-value text-amber" id="kpiRenameRate">0.0</span>
+          <span class="kpi-unit">renames/s</span>
+        </div>
+        <div class="kpi-subtext">Modifications: <strong id="kpiModRate">0.0/s</strong></div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-title">INCIDENTS LOGGED</span>
+          <span class="kpi-tag danger-tag" id="kpiCriticalTag">0 CRITICAL</span>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiTotalIncidents">0</span>
+          <span class="kpi-unit">total</span>
+        </div>
+        <div class="kpi-subtext">Directories touched: <strong id="kpiDirs">0</strong></div>
+      </div>
+    </section>
+
+    <!-- Main Section: Live Chart & Threat Gauge -->
+    <section class="main-telemetry-grid">
+      <!-- Live Chart -->
+      <div class="panel telemetry-panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">Real-Time Filesystem Behavioral Velocity</h2>
+            <p class="panel-subtitle">Streaming sliding-window operations, modifications, and rapid rename rates</p>
+          </div>
+          <div class="chart-legend-custom">
+            <span class="legend-item"><span class="legend-box col-cyan"></span> Operations Rate</span>
+            <span class="legend-item"><span class="legend-box col-amber"></span> Rename Rate (Extensions)</span>
+            <span class="legend-item"><span class="legend-box col-purple"></span> Modify Rate</span>
+          </div>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="telemetryChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Detection Status & Reasons Panel -->
+      <div class="panel status-panel">
+        <div class="panel-header">
+          <h2 class="panel-title">Live Behavioral Heuristics</h2>
+          <span class="badge" id="mlModelBadge">ML: RANDOM FOREST</span>
+        </div>
+
+        <div class="gauge-box">
+          <div class="gauge-circle" id="gaugeCircle">
+            <div class="gauge-inner">
+              <span class="gauge-number" id="gaugeScore">0</span>
+              <span class="gauge-label" id="gaugeSeverity">LOW RISK</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="reasons-box">
+          <div class="reasons-title">ACTIVE BEHAVIORAL INDICATORS:</div>
+          <ul class="reasons-list" id="activeReasonsList">
+            <li class="reason-item">System idle. Baseline parameters nominal.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Incidents Table Section -->
+    <section class="panel incidents-panel">
+      <div class="panel-header">
+        <div>
+          <h2 class="panel-title">Security Incidents & Detections</h2>
+          <p class="panel-subtitle">Persistent SQLite evidence log with correlated process telemetry</p>
+        </div>
+        <div class="table-actions">
+          <button id="btnRefreshIncidents" class="btn btn-sm btn-outline">Refresh</button>
+          <button id="btnClearIncidents" class="btn btn-sm btn-outline danger-text">Clear History</button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="incidents-table" id="incidentsTable">
+          <thead>
+            <tr>
+              <th>INCIDENT ID</th>
+              <th>TIMESTAMP</th>
+              <th>SEVERITY</th>
+              <th>RISK SCORE</th>
+              <th>ML CONFIDENCE</th>
+              <th>OFFENDING PROCESS</th>
+              <th>PRIMARY INDICATORS</th>
+              <th>ACTION</th>
+            </tr>
+          </thead>
+          <tbody id="incidentsTableBody">
+            <tr>
+              <td colspan="8" class="text-center empty-state">No incidents detected yet. Run the Ransomware simulation above to test.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- Incident Details & AI Modal -->
+  <div class="modal-overlay" id="incidentModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div>
+          <span class="badge" id="modalSeverityBadge">CRITICAL</span>
+          <h2 class="modal-title" id="modalIncidentId">INC-000000</h2>
+          <span class="modal-time" id="modalTimestamp">2026-09-09 10:00:00</span>
+        </div>
+        <button class="modal-close" id="btnModalClose">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Telemetry Summary Row -->
+        <div class="modal-meta-grid">
+          <div class="meta-item">
+            <span class="meta-label">Offending Process</span>
+            <span class="meta-val" id="modalProcess">python3 (PID: 1234)</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">ML Prediction</span>
+            <span class="meta-val" id="modalMl">RANSOMWARE_LIKE (94.5%)</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Risk Score</span>
+            <span class="meta-val" id="modalScore">92 / 100</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Target Sandbox</span>
+            <span class="meta-val text-truncate" id="modalPath">test_data/</span>
+          </div>
+        </div>
+
+        <!-- Behavioral Features Grid -->
+        <div class="section-box">
+          <h3 class="section-title">Behavioral Telemetry (5s Sliding Window)</h3>
+          <div class="features-pill-grid" id="modalFeaturesGrid">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Observed Indicators -->
+        <div class="section-box">
+          <h3 class="section-title">Detection Explanations & Heuristic Rules</h3>
+          <ul class="indicators-list" id="modalReasonsList">
+            <!-- Dynamically populated -->
+          </ul>
+        </div>
+
+        <!-- RAG Retrieved Cybersecurity Knowledge -->
+        <div class="section-box">
+          <div class="section-title-row">
+            <h3 class="section-title">RAG Retrieved Cybersecurity Defense Knowledge</h3>
+            <span class="badge info-badge">LOCAL VECTOR STORE</span>
+          </div>
+          <div class="rag-cards" id="modalRagCards">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Gemini AI Analysis Section -->
+        <div class="section-box gemini-analysis-box">
+          <div class="section-title-row">
+            <div class="ai-title-wrap">
+              <svg class="sparkle-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/>
+              </svg>
+              <h3 class="section-title">Google Gemini Post-Detection AI Triage</h3>
+            </div>
+            <button id="btnReanalyze" class="btn btn-sm btn-secondary">Run Gemini AI Triage</button>
+          </div>
+
+          <div id="aiAnalysisContent">
+            <p class="text-muted">Loading analysis...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
