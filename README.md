@@ -288,3 +288,23 @@ Tests cover:
 
 ## 13. License
 This defensive academic prototype is open-source under the MIT License. Built for educational and defensive cybersecurity research.
+
+### intallation guide
+
+
+```
+git clone https://github.com/NARASIMHAMURTHY4616/RansomWatch.git
+```
+
+```
+cd RansoWatch
+pip install -r requirements.txt
+```
+
+```
+python run.py
+```
+or 
+```
+python3 run.py
+```
