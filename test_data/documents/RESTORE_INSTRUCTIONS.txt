@@ -1,7 +1,0 @@
-===================================================================
-            RANSOMWATCH DEFENSIVE RESEARCH SIMULATION              
-===================================================================
-This is a harmless simulated attack note generated inside test_data/.
-NO REAL ENCRYPTION HAS OCCURRED.
-No files outside test_data/ were touched.
-Run simulator with --cleanup to reset the test directory.

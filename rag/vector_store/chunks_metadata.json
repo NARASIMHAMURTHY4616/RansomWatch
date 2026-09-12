@@ -1,0 +1,107 @@
+[
+  {
+    "source": "incident_response.md",
+    "section": "1. Preparation & Detection",
+    "length": 340
+  },
+  {
+    "source": "incident_response.md",
+    "section": "2. Identification & Rapid Triage",
+    "length": 432
+  },
+  {
+    "source": "incident_response.md",
+    "section": "3. Emergency Containment Procedures",
+    "length": 719
+  },
+  {
+    "source": "incident_response.md",
+    "section": "4. Eradication & Clean-Up",
+    "length": 355
+  },
+  {
+    "source": "incident_response.md",
+    "section": "5. Recovery & Validation",
+    "length": 383
+  },
+  {
+    "source": "incident_response.md",
+    "section": "6. Post-Incident Activity & Lessons Learned",
+    "length": 268
+  },
+  {
+    "source": "mitigation.md",
+    "section": "Defense-in-Depth Architecture",
+    "length": 251
+  },
+  {
+    "source": "mitigation.md",
+    "section": "1. Immutable and Isolated Backups",
+    "length": 491
+  },
+  {
+    "source": "mitigation.md",
+    "section": "2. Principle of Least Privilege (PoLP)",
+    "length": 486
+  },
+  {
+    "source": "mitigation.md",
+    "section": "3. Network Micro-Segmentation",
+    "length": 408
+  },
+  {
+    "source": "mitigation.md",
+    "section": "4. Endpoint Behavioral Protections",
+    "length": 426
+  },
+  {
+    "source": "mitre_attck.md",
+    "section": "Overview",
+    "length": 322
+  },
+  {
+    "source": "mitre_attck.md",
+    "section": "T1486: Data Encrypted for Impact",
+    "length": 644
+  },
+  {
+    "source": "mitre_attck.md",
+    "section": "T1485: Data Destruction",
+    "length": 368
+  },
+  {
+    "source": "mitre_attck.md",
+    "section": "T1490: Inhibit System Recovery",
+    "length": 426
+  },
+  {
+    "source": "mitre_attck.md",
+    "section": "T1083: File and Directory Discovery",
+    "length": 399
+  },
+  {
+    "source": "mitre_attck.md",
+    "section": "T1021: Remote Services (Lateral Movement)",
+    "length": 277
+  },
+  {
+    "source": "mitre_attck.md",
+    "section": "T1562.001: Impair Defenses - Disable or Modify Tools",
+    "length": 247
+  },
+  {
+    "source": "ransomware.md",
+    "section": "Overview",
+    "length": 395
+  },
+  {
+    "source": "ransomware.md",
+    "section": "Core Operational Phases",
+    "length": 1238
+  },
+  {
+    "source": "ransomware.md",
+    "section": "Early Behavioral Detection Indicators",
+    "length": 871
+  }
+]

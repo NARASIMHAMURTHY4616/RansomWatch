@@ -1,0 +1,18 @@
+[2026-09-12 16:01:13] [INFO] [RansomWatch.Detector] Loaded behavioral detection model from /home/narasimha/git_prjs/RansomWatch/detection/model/ransomwatch_model.pkl
+[2026-09-12 16:01:13] [INFO] [RansomWatch.RAGRetriever] Loaded RAG vector store with 21 knowledge chunks.
+[2026-09-12 16:01:13] [INFO] [RansomWatch.GeminiAnalyzer] Gemini client successfully initialized.
+[2026-09-12 16:01:13] [INFO] [RansomWatch.Database] Database initialized at: /home/narasimha/git_prjs/RansomWatch/ransomwatch.db
+[2026-09-12 16:01:13] [INFO] [RansomWatch.FileMonitor] FileMonitor started watching: /home/narasimha/git_prjs/RansomWatch/test_data
+[2026-09-12 16:01:13] [INFO] [RansomWatch] Real-time detection pipeline loop started.
+[2026-09-12 16:01:13] [INFO] [RansomWatch] RansomWatch backend initialized and active.
+[2026-09-12 16:01:14] [INFO] [RansomWatch.FileMonitor] FileMonitor stopped.
+[2026-09-12 16:01:15] [INFO] [RansomWatch] RansomWatch backend shut down.
+[2026-09-12 16:01:21] [INFO] [RansomWatch.Detector] Loaded behavioral detection model from /home/narasimha/git_prjs/RansomWatch/detection/model/ransomwatch_model.pkl
+[2026-09-12 16:01:21] [INFO] [RansomWatch.RAGRetriever] Loaded RAG vector store with 21 knowledge chunks.
+[2026-09-12 16:01:21] [INFO] [RansomWatch.GeminiAnalyzer] Gemini client successfully initialized.
+[2026-09-12 16:01:21] [INFO] [RansomWatch.Database] Database initialized at: /home/narasimha/git_prjs/RansomWatch/ransomwatch.db
+[2026-09-12 16:01:21] [INFO] [RansomWatch.FileMonitor] FileMonitor started watching: /home/narasimha/git_prjs/RansomWatch/test_data
+[2026-09-12 16:01:21] [INFO] [RansomWatch] Real-time detection pipeline loop started.
+[2026-09-12 16:01:21] [INFO] [RansomWatch] RansomWatch backend initialized and active.
+[2026-09-12 16:01:49] [INFO] [RansomWatch.FileMonitor] FileMonitor stopped.
+[2026-09-12 16:01:50] [INFO] [RansomWatch] RansomWatch backend shut down.
