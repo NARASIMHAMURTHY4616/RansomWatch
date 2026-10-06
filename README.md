@@ -13,10 +13,10 @@
 ## 1. Project Overview & Problem Statement
 
 ### Problem Statement
-Traditional signature-based antivirus solutions (AV) and static hash lookups fail against zero-day ransomware, polymorphic payloads, and rapidly mutating threat actors. By the time a signature is updated, ransomware has already encrypted local disks and network shares.
+Traditional signature-based antivirus solutions (AV) and static hash lookups fail against zero-day ransomware, polymorphic payloads, and rapidly mutating threat actors. By the time a signature is created, the encryption damage has already occurred. Modern ransomware campaigns often rely on speed, stealth, and file-system churn to maximize impact in seconds.
 
 ### Solution: RansomWatch
-**RansomWatch** detects ransomware **at the behavior level** during the earliest stages of execution (within 5 seconds of the initial burst), before widespread encryption can occur. It monitors filesystem events and active processes, calculates sliding-window velocity metrics, performs inference via a trained **RandomForestClassifier**, computes an explainable **0–100 Risk Score**, persists forensic evidence to **SQLite**, queries a local **RAG knowledge base** (MITRE ATT&CK & NIST Incident Response), and leverages **Google Gemini AI** for autonomous post-detection triage and containment recommendations.
+**RansomWatch** detects ransomware at the behavior level during the earliest stages of execution (within 5 seconds of the initial burst), before widespread encryption can occur. It monitors file-system and process telemetry, extracts behavioral features from a sliding window, scores risk in real time, stores evidence, and leverages AI-assisted analysis for defensive triage.
 
 ---
 
@@ -49,20 +49,20 @@ Traditional signature-based antivirus solutions (AV) and static hash lookups fai
 |  - Explainable Risk Engine (0-100 Score, LOW / MEDIUM / HIGH / CRITICAL)                 |
 +-----------------------------------------------------------------------------------------+
                                            │
-                     ┌─────────────────────┴─────────────────────┐
-                     ▼                                           ▼
+                      ┌─────────────────────┴─────────────────────���
+                      ▼                                           ▼
 +------------------------------------------+    +------------------------------------------+
 | EVIDENCE DATABASE (SQLite / SQLAlchemy)  |    | FASTAPI REST API (Uvicorn Async Server)   |
 | Persistent incident logs & telemetry     |    | Metrics, health status, and live feeds   |
 +------------------------------------------+    +------------------------------------------+
-                     │                                           │
-                     ▼                                           ▼
+                      │                                           │
+                      ▼                                           ▼
 +------------------------------------------+    +------------------------------------------+
 | RAG KNOWLEDGE RETRIEVAL (Vector Store)   |    | CYBERSECURITY SOC DASHBOARD              |
 | Ingested MITRE ATT&CK, NIST IR, Defense  |    | Dark SOC UI, Chart.js, Real-time alerts  |
 +------------------------------------------+    +------------------------------------------+
-                     │
-                     ▼
+                      │
+                      ▼
 +-----------------------------------------------------------------------------------------+
 | GEMINI AI INCIDENT ANALYZER (google-genai SDK)                                          |
 | Defensive triage, IOCs, containment steps, MITRE T1486 mapping (graceful offline fallback) |
@@ -91,7 +91,7 @@ Traditional signature-based antivirus solutions (AV) and static hash lookups fai
 > [!IMPORTANT]
 > **SAFETY GUARANTEES FOR ACADEMIC EVALUATION**:
 > 1. **Sandbox Isolation**: The Attack Simulator operates **strictly inside `RansomWatch/test_data/`**. Paths are canonicalized and verified before any filesystem operation.
-> 2. **Harmless Operations**: The simulator never performs real cryptographic encryption. It performs harmless simulated text transformations (prepending nonces and mock headers) and appends simulated ransom extensions (`.locked`, `.crypto`).
+> 2. **Harmless Operations**: The simulator never performs real cryptographic encryption. It performs harmless simulated text transformations (prepending nonces and mock headers) and appends simulated ransomware-like markers.
 > 3. **Non-Destructive**: Never deletes, modifies, or scans files outside `test_data/`.
 > 4. **Safe Process Handling**: The prototype inspects process telemetry read-only; it does not escalate privileges or kill system processes.
 > 5. **Defensive AI Prompting**: Gemini AI is strictly constrained to post-detection explanation and defensive incident response.
@@ -102,7 +102,8 @@ Traditional signature-based antivirus solutions (AV) and static hash lookups fai
 
 ### Step 1: Clone Repository & Create Virtual Environment
 ```bash
-cd /home/narasimha/git_prjs/RansomWatch
+git clone https://github.com/NARASIMHAMURTHY4616/RansomWatch.git
+cd RansomWatch
 
 # Create Python virtual environment
 python3 -m venv .venv
@@ -126,7 +127,7 @@ MONITOR_WINDOW_SECONDS=5.0
 # Optional: Set your Gemini API key for real-time generative AI incident triage
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
-*(Note: If `GEMINI_API_KEY` is not provided, RansomWatch automatically operates in offline fallback mode with built-in heuristic analysis. Detection and risk scoring are 100% independent of Gemini).*
+*(Note: If `GEMINI_API_KEY` is not provided, RansomWatch automatically operates in offline fallback mode with built-in heuristic analysis. Detection and risk scoring are 100% independent of Gemini for the core monitoring pipeline.)*
 
 ---
 
@@ -138,19 +139,19 @@ The system will automatically initialize models on first boot, but you can also 
 ```bash
 python -m dataset.generate_dataset
 ```
-*Generates 5,000 synthetic behavioral samples (`dataset/behavior_dataset.csv`) balancing benign activity (compiling, browsing, text editing, idle) and ransomware patterns (burst modifications, multi-folder traversals, rapid renaming).*
+*Generates 5,000 synthetic behavioral samples (`dataset/behavior_dataset.csv`) balancing benign activity (compiling, browsing, text editing, idle) and ransomware patterns (burst modifications, mutations, rename storms, staged encryption cues).*
 
 ### 2. Train the Random Forest Classifier
 ```bash
 python -m detection.train_model
 ```
-*Trains a balanced `RandomForestClassifier` (120 estimators, depth 12) with stratified 80/20 train/test evaluation. Evaluates accuracy, precision, recall (prioritizing low false negatives), F1-score, and confusion matrix, saving artifacts to `detection/model/ransomwatch_model.pkl`.*
+*Trains a balanced `RandomForestClassifier` (120 estimators, depth 12) with stratified 80/20 train/test evaluation. Evaluates accuracy, precision, recall (prioritizing low false negatives), F1-score, and confusion matrix output.*
 
 ### 3. Ingest Cybersecurity Knowledge into RAG
 ```bash
 python -m rag.ingest
 ```
-*Parses and chunks Markdown documents in `rag/knowledge_base/` (`ransomware.md`, `incident_response.md`, `mitigation.md`, `mitre_attck.md`), creates normalized vector embeddings, and serializes the index to `rag/vector_store/`.*
+*Parses and chunks Markdown documents in `rag/knowledge_base/` (`ransomware.md`, `incident_response.md`, `mitigation.md`, `mitre_attck.md`), creates normalized vector embeddings, and serializes them to disk for similarity-based retrieval.*
 
 ---
 
@@ -289,22 +290,18 @@ Tests cover:
 ## 13. License
 This defensive academic prototype is open-source under the MIT License. Built for educational and defensive cybersecurity research.
 
-### intallation guide
+## 14. Installation Guide
 
-
-```
+```bash
 git clone https://github.com/NARASIMHAMURTHY4616/RansomWatch.git
-```
-
-```
-cd RansoWatch
+cd RansomWatch
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
 pip install -r requirements.txt
-```
-
-```
 python run.py
-```
-or 
-```
+# or
 python3 run.py
 ```
+
+This section keeps the setup steps concise and consistent with the earlier installation instructions.
